@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<!--
+/**
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+-->
+<configuration>
+	<property>
+        <name>hbase.cluster.distributed</name>
+        <value>true</value>
+	</property>
+
+	<property>
+        <name>hbase.rootdir</name>
+        <value>hdfs://test.master.com:8020/hbase</value>
+	</property>
+
+    <property>
+        <name>hbase.zookeeper.quorum</name>
+        <value>test.master.com,test.slave1.com,test.slave2.com,test.slave3.com</value>
+    </property>
+
+    <property>
+        <name>hbase.rpc.timeout</name>
+        <value>180000</value>
+    </property>
+
+    <property>
+        <name>zookeeper.session.timeout</name>
+        <value>180000</value>
+        <description>ZooKeeper session timeout. HBase passes this to the zk quorum as suggested maximum time for a session.  See http://hadoop.apache.org/zookeeper/docs/current/zookeeperProgrammers.html#ch_zkSessions “The client sends a requested timeout, the server responds with the timeout that it can give the client. The current implementation requires that the timeout be a minimum of 2 times the tickTime (as set in the server configuration) and a maximum of 20 times the tickTime.” Set the zk ticktime with hbase.zookeeper.property.tickTime. In milliseconds. </description>
+    </property>
+    
+    <property>
+        <name>hbase.regionserver.restart.on.zk.expire</name>
+        <value>true</value>
+        <description>Zookeeper session expired will force regionserver exit. Enable this will make the regionserver restart. </description>
+    </property>
+
+    <property>
+        <name>hbase.hregion.majorcompaction</name>
+        <value>0</value>
+    </property>
+
+    <!--
+    <property>
+        <name>hbase.regionserver.global.memstore.upperLimit</name>
+        <value>0.3</value>
+    </property>
+
+    <property>
+        <name>hbase.regionserver.global.memstore.lowerLimit</name>
+        <value>0.2</value>
+    </property>
+
+    <property>
+        <name>hfile.block.cache.size</name>
+        <value>0.25</value>
+    </property>
+    -->
+
+    <property>
+        <name>hbase.hstore.compactionThreshold</name>
+        <value>2147483647</value>
+    </property>
+
+    <property>
+        <name>hbase.hstore.blockingStoreFiles</name>
+        <value>2147483647</value>
+    </property>
+
+    <property>
+        <name>hbase.hstore.compaction.min</name>
+        <value>2147483647</value>
+    </property>
+
+    <property>
+        <name>hbase.hstore.blockingWaitTime</name>
+        <value>360000</value>
+    </property>
+
+    <!--
+    <property>
+        <name>hbase.hregion.memstore.block.multiplier</name>
+        <value>2</value>
+    </property>
+    -->
+
+    <property>
+        <name>hbase.hregion.memstore.mslab.enabled</name>
+        <value>true</value>
+    </property>
+
+    <!--
+    <property>
+        <name>hbase.hregion.max.filesize</name>
+        <value>536870912</value>
+    </property>
+    -->
+
+    <property>
+        <name>hbase.hregion.memstore.flush.size</name>
+        <value>67108864</value>
+    </property>
+
+    <property>
+        <name>hbase.client.scanner.timeout.period</name>
+        <value>600000</value>
+    </property>
+
+    <property>
+        <name>hbase.client.retries.number</name>
+        <value>3</value>
+    </property>
+    <property>
+        <name>hbase.regionserver.handler.count</name>
+        <value>100</value>
+    </property>
+
+</configuration>

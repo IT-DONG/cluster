@@ -1,0 +1,24 @@
+一,参考cluster/mysql目录中的README文件，安装mysql，并测试mysql可用
+1, 根据http://heylinux.com/archives/2456.html，创建hive访问mysql的账号
+
+二,zookeeper安装
+1, 在cluster/zookeeper/script/config.sh中配置zk版本信息
+2, 并在cluster/zookeeper/tools/目录中下载所配置版本的zookeeper tar.gz安装包
+3, 执行cluster/zookeeper/script/install.sh进行zk安装
+4, 测试zk安装成功
+
+三,安装步骤
+1, 配置cluster/hive/script/config.sh中相关信息
+2, 执行sh install.sh进行安装
+
+四,启动hive步骤
+###下面步骤仅在master node上操作###
+1, 启动hive metasotre命令: hive --service metastore &
+2, 启动hive server，hive server分为1.0和2.0两个版本, 通常我们共2.0版本
+3, hive server 1.0启动及端口修改(如需)：nohup hive --service hiveserver -p 8088 &
+4, hive server 2.0启动及端口修改(如需)：nohup hive --service hiveserver2 --hiveconf hive.server2.thrift.port=8088 &
+5, 启动hive client命令：hive
+6, 启动hive客户端命令: hive， 如需打印更多hive日志，可以如此设置: hive -hiveconf hive.root.logger=DEBUG,console
+
+三，注意
+如遇到问题，看日志，看日志，看日志

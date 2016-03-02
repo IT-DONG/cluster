@@ -1,0 +1,35 @@
+一、代码签出
+1  配置下git的用户名
+2, git clone --depth=1 ssh://g@gitlab.test.com:8022/wang.dong/cluster.git
+
+二、安装部署
+以下步骤1-4使用root账号
+----------------------------------------------------------------------------------------------------------------------------------
+1, 检查每台机器中/etc/hosts文件, ip相应改成新的hostname
+2, 根据config.sh中的配置hadoop包版本信息、rpm包信息(主要提取64位库), 集群用户名字(一般配置hadoop)，并根据配置信息，下载安装包到cluster/cdh/tools目录
+3, 进入cluster/cdh/scripts/, 执行sh trust.sh, 建立hadoop用户、集群各机器间信任关系及必要目录,会提示要求输入集群各节点root登陆密码
+4, 进入cluster/cdh/scripts/, 执行安装sh install.sh, 会自动对各节点scp必要文件，并进行解压安装、环境变量设置等操作
+
+以下步骤5-9使用hadoop账号
+----------------------------------------------------------------------------------------------------------------------------------
+5, 使用hadoop账号在master上登陆，且仅在master node上面，格式化namenode, 命令: $HADOOP_HOME/bin/hadoop namenode -format, 注意, 对于非首次format namenode后，需要手动把各个slave节点上datanode数据目录里面的数据文件清空, 否则启动start-dfs.sh失败。！！！另，format后之前数据会丢失无法使用
+6, 使用hadoop账号在master上登陆，执行$HADOOP_HOME/sbin/start-dfs.sh启动hdfs; $HADOOP_HOME/sbin/start-yarn.sh启动yarn; $HADOOP_HOME/sbin/mr-jobhistory-daemon.sh start historyserver启动historyserver， 对应$HADOOP_HOME/sbin/stop-*.sh参数为关闭停止
+7, 启动后，source ~/.bash_profile;jps查看hadoop相关进程是否成功启动，如果集群成功启动，则
+master上会出现类似如下进程：
+23599 JobHistoryServer
+19926 ResourceManager
+12603 NameNode
+
+slave上会出现类似如下进程:
+27895 DataNode
+28668 NodeManager
+
+8, hdfs dfsadmin -report查看整体集群节点状态是否正常
+9, 测试例子: 
+hdfs dfs -mkdir -p /user/hadoop/input
+hdfs dfs -put $HADOOP_HOME/etc/hadoop/*.xml input
+hdfs dfs -ls input
+hadoop jar $HADOOP_HOME/share/hadoop/mapreduce/hadoop-mapreduce-examples-*.jar grep input output 'dfs[a-z.]+'
+hdfs dfs -cat output/*
+
+如果测试例子能看到结果，则hadoop集群可用啦，如果无法正常启动或出现错误，则分别进入master及任意一台slave上查看$HADOOP_HOME/logs/中相关*.log日志文件，分析错误

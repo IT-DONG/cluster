@@ -1,0 +1,61 @@
+1, download all the following files
+apache-maven-3.0.5-bin.tar.gz
+boost_1_46_1.tar.gz
+cmake-3.0.2.tar.gz
+impala-2.2.0-cdh5.4.4-src.tar.gz
+llvm-3.3.src.tar.gz
+
+2, start statestored and catalogd on master node only
+
+nohup bin/start-statestored.sh -build_type=debug  –log_dir=${IMPALA_HOME}/logs &
+or $IMPALA_HOME/be/build/debug/statestore/statestored -state_store_port=24000
+
+nohup bin/start-catalogd.sh -build_type=debug  –log_dir=${IMPALA_HOME}/logs &
+
+3, start impalad on slave nodes only
+nohup bin/start-impalad.sh -build_type=debug -log_dir=${IMPALA_HOME}/logs -catalog_service_host=test.master.com -state_store_port=24000 -use_statestore -state_store_host=test.master.com &
+
+4, check the cluster status, http://test.master.com:25010/metrics, 22000端口对应impalad节点
+
+5,
+这一步最简单，随便找一个机器启动
+$IMPALA_HOME/bin/impala-shell.sh
+#启动之后可以随便连接一个impala service
+如果是master： 则需要connect m12
+注意：m12为任意一个含有impalad机器的hostname，但如果希望在slave node上启动impala-shell.sh，必须先source bin/impala-config.sh
+如果是slaves： 直接自动连接自己的impalad，无需再connect连
+#连接上之后就可以执行show tables之类的操作了
+#需要注意的是，如果hive创建表或更新了表结构，impala的节点是不知道的
+#必须通过客户端连接各个impala service并执行refresh来刷新metadata
+#或者重启所有impala service
+
+
+
+
+6, others,启动Impala 集群
+Impala实际上由两部分组成，一个是StateStore，用来协调各个机器计算，相当于Master，然后就是Impalad，相当于Slave，启动方法如下：
+#启动statestore
+#方法1，直接利用impala/bin下面的这个python脚本
+#这个脚本会启动一个StateStore，同时启动-s个数量的Impala Service在本机
+$IMPALA_HOME/bin/start-impala-cluster.py -s 1 –log_dir /home/extend/impala/impalaLogs
+#方法2，手动启动StateStore
+$IMPALA_HOME/be/build/debug/statestore/statestored -state_store_port=24000
+#启动impala service
+#在每个编译安装了impala的节点上执行命令
+#参数-state_store_host指定启动了stateStore的机器名
+#-nn即namenode，指定hadoop的namenode
+#-nn_port是namenode的HDFS入口端口号
+$IMPALA_HOME/bin/start-impalad.sh -state_store_host=m11 -nn=m11 -nn_port=9000
+正常启动之后，访问http://${stateStore_Server}:25010/ 可以看到StateStore的状态，其中的subscribers页面可以看到已经连接上的impala service node；
+13.使用Impala客户端
+这一步最简单，随便找一个机器启动
+$IMPALA_HOME/bin/impala-shell.sh
+#启动之后可以随便连接一个impala service
+如果是master： 则需要connect m12
+注意：m12为任意一个含有impalad机器的hostname，但如果希望在slave node上启动impala-shell.sh，必须先source bin/impala-config.sh
+如果是slaves： 直接自动连接自己的impalad，无需再connect连
+#连接上之后就可以执行show tables之类的操作了
+#需要注意的是，如果hive创建表或更新了表结构，impala的节点是不知道的
+#必须通过客户端连接各个impala service并执行refresh来刷新metadata
+#或者重启所有impala service
+

@@ -1,0 +1,2 @@
+1, sbin/start-all.sh
+2, ${SPARK_HOME}/bin/spark-submit --master "spark://${SPARK_MASTER}:${SPARK_MASTER_PORT}" --class org.apache.spark.examples.SparkPi ${SPARK_HOME}/lib/spark-examples-*.jar 

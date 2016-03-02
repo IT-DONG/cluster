@@ -1,0 +1,10 @@
+*.tar.gz
+*.tgz
+*.tar.bz2
+*.zip
+*.rpm
+*.jar
+nohup.out
+.*.swp
+*.log
+*.log.*

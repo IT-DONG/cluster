@@ -1,0 +1,71 @@
+http://blog.sina.com.cn/s/blog_5d37bf9f0101iuse.html
+
+标签： mysql 数据库 linux 源码 软件包   
+注:请自行配置好yum源,不过centos默认的在线yum源也挺好用
+# yum -y install  gcc gcc-c++ gcc-g77 autoconf automake zlib* fiex* libxml* ncurses* libmcrypt* libtool-ltdl-devel* make cmake --必要软件包安装
+# useradd mysql
+# tar -zxvf mysql-5.6.10.tar.gz
+# cd mysql-5.6.10
+# cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mysql5.6 --设置安装路径
+# make && make install --编译安装
+# chown -R mysql:mysql /usr/local/mysql5.6  --设置目录权限
+# /usr/local/mysql5.6/scripts/mysql_install_db --user=mysql --basedir=/usr/local/mysql5.6 --datadir=/usr/local/mysql5.6/data --安装db
+--以下为设置开机自启及启动服务
+# cp /usr/local/mysql5.6/support-files/mysql.server /etc/rc.d/init.d/mysql
+# cp /usr/local/mysql5.6/support-files/my-default.cnf /etc/my.cnf
+# chkconfig --add mysql && chkconfig mysql on
+# service mysql start
+
+--禁止匿名用户及修改root密码
+~/tools/mysql-5.6.20/bin/mysql_secure_installation
+
+以下可跳过
+
+附一些mysql的基本操作
+一、连接mysql。
+格式： mysql -h主机地址 -u用户名 －p用户密码
+首先进入安装目录
+# cd /usr/local/mysql5.6/bin
+# ./mysql -uroot -p
+输入密码，如果刚安装好mysql，超级用户root是没有密码的,提示符变为mysql>
+查看数据库
+mysql> show databases;
+选择数据库
+mysql> use mysql
+查看数据库中表
+mysql> show tables;
+配置环境变量
+export PATH=/usr/local/mysql5.6/bin:$PATH
+
+连接到远程主机上的mysql。远程IP为：192.168.11.98用户名root,密码abcd123 则键入以下命令：
+mysql -h192.168.11.98 -uroot -pabcd123
+（注:u与root可以不用加空格，其它也一样）
+3、 查询数据库状态
+mysql> status;
+4、 退出mysql命令：exit（回车）
+
+二、用户管理
+设置默认密码
+格式：mysqladmin -u用户名 -p旧密码 password 新密码
+注：因为开始时root没有密码，所以-p旧密码一项就可以省略了。
+# mysqladmin -uroot password '123123'
+修改密码
+第一种方法
+将root的密码改为djg345
+# mysqladmin -uroot -p123123 password djg345
+以下方法需在mysql>提示符下操作
+第二种方法 更改user01密码为user01pwd
+mysql> SET PASSWORD FOR user01=PASSWORD("user01pwd");
+mysql> flush privileges;
+第三种方法 更改user01密码为user01pwd
+mysql> REPLACE INTO mysql.user (Host,User,Password) VALUES(%,user01,PASSWORD(user01pwd));
+mysql> flush privileges;
+第四种方法 grant主要用于设置权限
+mysql> GRANT USAGE ON *.* TO user01@"%" IDENTIFIED BY user01pwd;
+创建用户 user01密码user01pwd
+mysql> INSERT INTO mysql.user (Host,User,Password) VALUES(%,user01,PASSWORD(user01pwd));
+mysql> FLUSH PRIVILEGES;
+设置用户权限
+给予nconf用户对nconf库所有权限
+mysql> grant all privileges on nconf.* to nconf@"%" identified by 'nconf';
+mysql> flush privileges;
