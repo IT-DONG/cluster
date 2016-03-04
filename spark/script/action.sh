@@ -53,7 +53,7 @@ echo "export SPARK_MASTER_PORT=${SPARK_MASTER_PORT}" >> ${SPARK_HOME}/conf/spark
 echo "export SPARK_MASTER_OPTS+=' -Dspark.deploy.defaultCores=${SPARK_WORKER_CORES}'" >> ${SPARK_HOME}/conf/spark-env.sh
 echo "export SPARK_MASTER_WEBUI_PORT=${SPARK_MASTER_WEBUI_PORT}" >> ${SPARK_HOME}/conf/spark-env.sh
 echo "export SPARK_WORKER_WEBUI_PORT=${SPARK_WORKER_WEBUI_PORT}" >> ${SPARK_HOME}/conf/spark-env.sh
-echo "export SPARK_WORKER_INSTANCES=${SPARK_WORKER_INSTANCES}" >> ${SPARK_HOME}/conf/spark-env.sh
+echo "export SPARK_EXECUTOR_INSTANCES=${SPARK_WORKER_INSTANCES}" >> ${SPARK_HOME}/conf/spark-env.sh
 echo "export SPARK_WORKER_CORES=${SPARK_WORKER_CORES}" >> ${SPARK_HOME}/conf/spark-env.sh
 echo "export SPARK_WORKER_MEMORY=${SPARK_WORKER_MEMORY}" >> ${SPARK_HOME}/conf/spark-env.sh
 echo "export SPARK_EXECUTOR_MEMORY=${SPARK_EXECUTOR_MEMORY}" >> ${SPARK_HOME}/conf/spark-env.sh
